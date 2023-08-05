@@ -1746,10 +1746,12 @@
                         iommus = <&apps_smmu 0x0584 0x0011>,
                                  <&apps_smmu 0x0594 0x0011>;
 		        interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
+                        #dma-cells = <1>;
                         qcom,ee = <0>;
                         qcom,iommu-dma = "atomic";
                         interconnects = <&aggre2_noc MASTER_CRYPTO &mc_virt SLAVE_EBI1>;
 		        interconnect-names = "data_path";
+                        status = "disabled";
 		};
 
 
@@ -3247,7 +3249,7 @@
 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
 		};
 
-		timer@17c20000 {
+		memtimer: timer@17c20000 {
 			compatible = "arm,armv7-timer-mem";
 			#address-cells = <1>;
 			#size-cells = <1>;
@@ -4308,6 +4310,6 @@
 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+			     <GIC_PPI 12 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
 	};
 };
