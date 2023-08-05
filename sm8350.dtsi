@@ -907,9 +907,10 @@
 			};
 		};
 
-		gpi_dma0: dma-controller@9800000 {
+		gpi_dma0: dma-controller@900000 {
 			compatible = "qcom,sm8350-gpi-dma", "qcom,sm6350-gpi-dma";
-			reg = <0 0x09800000 0 0x60000>;
+			//reg = <0 0x09800000 0 0x60000>;
+                        reg = <0x900000 0x60000>;
 			interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
@@ -1735,27 +1736,22 @@
 			};
 		};
 
-		cryptobam: dma-controller@1dc4000 {
-			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
-			reg = <0 0x01dc4000 0 0x24000>;
-			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
-			#dma-cells = <1>;
-			qcom,ee = <0>;
-			qcom,controlled-remotely;
-			iommus = <&apps_smmu 0x594 0x0011>,
-				 <&apps_smmu 0x596 0x0011>;
+
+                crypto: crypto@1de0000 {
+		        compatible = "qcom,sm8350-qce", "qcom,sm8150-qce", "qcom,qce";
+		        reg = <0x1de0000 0x20000>, <0x1dc4000 0x24000>;
+                        reg-names = "crypto-base","crypto-bam-base";
+                        dmas = <&cryptobam 4>, <&cryptobam 5>;
+                        dma-names = "rx", "tx";
+                        iommus = <&apps_smmu 0x0584 0x0011>,
+                                 <&apps_smmu 0x0594 0x0011>;
+		        interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
+                        qcom,ee = <0>;
+                        qcom,iommu-dma = "atomic";
+                        interconnects = <&aggre2_noc MASTER_CRYPTO &mc_virt SLAVE_EBI1>;
+		        interconnect-names = "data_path";
 		};
 
-		crypto: crypto@1dfa000 {
-			compatible = "qcom,sm8350-qce", "qcom,sm8150-qce", "qcom,qce";
-			reg = <0 0x01dfa000 0 0x6000>;
-			dmas = <&cryptobam 4>, <&cryptobam 5>;
-			dma-names = "rx", "tx";
-			iommus = <&apps_smmu 0x594 0x0011>,
-				 <&apps_smmu 0x596 0x0011>;
-			interconnects = <&aggre2_noc MASTER_CRYPTO 0 &mc_virt SLAVE_EBI1 0>;
-			interconnect-names = "memory";
-		};
 
 		ipa: ipa@1e40000 {
 			compatible = "qcom,sm8350-ipa";
@@ -4307,7 +4303,7 @@
 		};
 	};
 
-	timer {
+	arch_timer: timer {
 		compatible = "arm,armv8-timer";
 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
